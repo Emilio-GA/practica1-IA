@@ -9,6 +9,11 @@ struct state{
   int col;
   Orientacion brujula;
 };
+struct almacen{
+  int fil;
+  int col;
+  char letra;
+};
 
 class ComportamientoJugador : public Comportamiento{
 
@@ -19,6 +24,13 @@ class ComportamientoJugador : public Comportamiento{
      last_action = actIDLE;
      current_state.fil = current_state.col = 99;
      current_state.brujula= norte;
+     derecha = false;
+     bien_situado = false;
+     bool tengo_bikini= false;
+     bool tengo_zapatos= false;
+     int cont_malasuerte = 8;
+
+
     }
 
     ComportamientoJugador(const ComportamientoJugador & comport) : Comportamiento(comport){}
@@ -31,6 +43,12 @@ class ComportamientoJugador : public Comportamiento{
   // Declarar aquí las variables de estado
   Action last_action;
   state current_state;
+  bool derecha;
+  bool bien_situado;
+  bool tengo_bikini;
+  bool tengo_zapatos;
+  int cont_malasuerte;
+  vector <almacen> memori;
   
 };
 #endif
