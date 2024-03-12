@@ -15,16 +15,22 @@ Action ComportamientoJugador::think(Sensores sensores)
 	if(sensores.reset ==true){
 		cout << "ME CHOCO Y NO SE DONDE ESTOY" << endl;
 		bien_situado=false;
+		current_state.fil=current_state.col = 99;
 	}
+
+
+
 
 	//cout << "CONT = " << (int)cont << endl;
 
 	int contfil= 0,contcol = 0;
+	bool valido = false;
 	bool pasa_esquina =false;
 	bool encontrado=false;
 	bool prioridad = false;
 	int g=0, k=0, d=0;
 	bool g_encontrado= false, k_encontrado= false, d_encontrado= false;
+	int  resto_x = 0, resto_y =0;
 	
 
 
@@ -113,9 +119,270 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 		}
 	}
+	if ((sensores.terreno[0]== 'G' and !bien_situado) or (sensores.nivel==0 and !bien_situado)){
+		ultimo_col= current_state.col;
+		ultimo_fil=current_state.fil;
+		current_state.fil = sensores.posF;
+		current_state.col = sensores.posC;
+		current_state.brujula = sensores.sentido;
+		cout << "Me ubico" << endl;
+		bien_situado = true;
+	}
 
 
-	 //Memoria
+   //MEMORIA
+	//Brujula falsa
+
+	if(!bien_situado){
+	switch (last_action){
+
+			case actWALK : 
+				switch (brujula_falsa){
+					case norte: 
+					current_state.fil--; 
+					break;
+					case noreste: 
+						current_state.fil--; 
+						current_state.col++;
+					break;
+					case este: 
+						current_state.col++; 
+					break;
+					case sureste: 
+						current_state.fil++; 
+						current_state.col++;
+					break;
+					case sur: 
+						current_state.fil++;
+					
+					break;
+					case suroeste: 
+						current_state.fil++; 
+						current_state.col--; 
+					break;
+					case oeste: 
+						current_state.col--; 
+					break;
+					case noroeste: 
+						current_state.fil--; 
+						current_state.col--; 
+					break;
+				}
+			break;
+
+			case actRUN : 
+						switch (current_state.brujula){
+					case norte: 
+						current_state.fil= current_state.fil-2; 
+					break;
+					case noreste: 
+						current_state.fil= current_state.fil-2; 
+						current_state.col= current_state.col+2; 
+					break;
+					case este: 
+						current_state.col= current_state.col+2; 
+					break;
+					case sureste: 
+						current_state.fil= current_state.fil+2; 
+						current_state.col= current_state.col+2; 
+					break;
+					case sur: 
+						current_state.fil= current_state.fil+2; 
+					
+					break;
+					case suroeste: 
+						current_state.fil= current_state.fil+2; 
+						current_state.col= current_state.col-2; 
+					break;
+					case oeste: 
+						current_state.col= current_state.col-2; 
+					break;
+					case noroeste: 
+						current_state.fil= current_state.fil-2; 
+						current_state.col= current_state.col-2; 
+					break;
+				}
+
+			break;
+
+		case actTURN_SR:
+			brujula_falsa = static_cast<Orientacion>((brujula_falsa+1)%8);
+		break;
+
+		case actTURN_L:
+			brujula_falsa = static_cast<Orientacion>((brujula_falsa+6)%8);
+		break;
+
+	}
+	}
+	///*
+	//Pre guardado
+	if(!bien_situado){
+		cout << "DENTRO DE PREGUARDADO"<< endl;
+		hay_info=true;
+		for (int i=0; i<sensores.terreno.size(); i++){
+			//cout <<  mapaPreResultado[current_state.fil+contfil][current_state.col+contcol] << endl;
+			//cout << "DONDE ESTA  " << i << "  DONDE LO GUARDO  " << current_state.fil+contfil<< "   " <<current_state.col+contcol << endl;
+
+				if(mapaPreResultado[current_state.fil+contfil][current_state.col+contcol]  == '?' ){
+					mapaPreResultado[current_state.fil+contfil][current_state.col+contcol] = sensores.terreno[i];
+				}
+
+
+
+			cout << "LO QUE HAY  " << sensores.terreno[i] << "  LO QUE GUARDO  " << mapaPreResultado[current_state.fil+contfil][current_state.col+contcol] << endl;
+			cout << "DONDE ESTA  " << i << "  DONDE LO GUARDO  " << current_state.fil+contfil<< "   " <<current_state.col+contcol << endl;
+
+				if (i == 0){
+
+
+					switch (brujula_falsa){
+						case norte:	  contfil = contcol = -1; 	break;
+						case noreste: contfil = -1;contcol = 0;pasa_esquina=false;	break;
+						case este:    contfil= -1; contcol = +1;	break;
+						case sureste: contfil = 0;contcol = +1;pasa_esquina=false;	break;
+						case sur:     contfil = contcol = +1; 	break;
+						case suroeste:contfil = +1;contcol = 0;pasa_esquina=false;	break;
+						case oeste:   contfil= +1; contcol = -1;	break;
+						case noroeste:contfil = 0;contcol = -1;pasa_esquina=false;	break;
+					}
+
+				}else if (i == 3){
+
+					switch (brujula_falsa){
+						case norte:	  contfil = contcol = -2; 	break;
+						case noreste: contfil = -2; contcol = 0;pasa_esquina=false;	break;
+						case este:    contfil= -2; contcol = +2;	break;
+						case sureste: contfil = 0;contcol = +2;pasa_esquina=false;break;
+						case sur:     contfil = contcol = +2; 	break;
+						case suroeste:contfil = +2;contcol = 0;pasa_esquina=false;	break;
+						case oeste:   contfil= +2; contcol = -2;	break;
+						case noroeste:contfil = 0;contcol = -2;pasa_esquina=false;	break;
+					}
+
+				}else if (i == 8){
+
+					switch (brujula_falsa){
+						case norte:	  contfil = contcol = -3; 	break;
+						case noreste: contfil = -3;contcol = 0;pasa_esquina=false;	break;
+						case este:    contfil= -3; contcol = +3;	break;
+						case sureste: contfil = 0;contcol = +3;pasa_esquina=false;	break;
+						case sur:     contfil = contcol = +3;	break;
+						case suroeste:contfil = +3;contcol = 0;pasa_esquina=false;	break;
+						case oeste:   contfil= +3; contcol = -3;	break;
+						case noroeste:contfil = 0;contcol = -3;pasa_esquina=false;	break;
+					}
+
+				}else{
+					switch (brujula_falsa){
+						case norte:	  contcol++; 	break;
+						case noreste: 
+							if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+								contfil++;
+								pasa_esquina=true;
+							}else{
+								contcol++;
+							};
+						break;
+						case este:    contfil++;	break;
+						case sureste: 
+							if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+								contcol--;
+								pasa_esquina=true;
+							}else{
+								contfil++;
+							};	break;
+						case sur:     contcol--; break;
+						case suroeste:
+							if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+						
+								contfil--;
+								pasa_esquina=true;
+							}else{
+								contcol--;
+								
+							};	break;
+						case oeste:   contfil--;	break;
+						case noroeste:	
+							if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+								contcol++;
+								pasa_esquina=true;
+							}else{
+								contfil--;
+							};	break;
+					}			
+				}
+
+			}
+		}
+
+		//VOLCADO
+		if(bien_situado && hay_info){
+			cout << "DENTRO DE volcado"<< endl;
+
+
+
+
+			switch (brujula_falsa){
+
+				case norte:
+				cout << "brujala al norte  "<<valido << " size " << mapaPreResultado.size() << endl;
+				for (int x=0; x < mapaPreResultado.size(); x++){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil+1;
+							resto_y= y - ultimo_col;	
+							if(mapaResultado[current_state.fil+resto_x][current_state.col+resto_y]  == '?' ){
+								cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+resto_x][current_state.col+resto_y] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}	
+					/*					 
+					for (int i=0; i<mapaPreResultado.size()*mapaPreResultado.size(); i++){
+
+
+						if(mapaResultado[current_state.fil+resto_x][current_state.col+resto_y]  == '?' ){
+							mapaResultado[current_state.fil+resto_x][current_state.col+resto_y] = mapaPreResultado[x][y];
+						}	
+					}
+					*/
+				
+				
+				
+				
+				break;
+
+
+
+
+				/*
+				case noreste: contfil = -3;contcol = 0;pasa_esquina=false;	break;
+				case este:    contfil= -3; contcol = +3;	break;
+				case sureste: contfil = 0;contcol = +3;pasa_esquina=false;	break;
+				case sur:     contfil = contcol = +3;	break;
+				case suroeste:contfil = +3;contcol = 0;pasa_esquina=false;	break;
+				case oeste:   contfil= +3; contcol = -3;	break;
+				case noroeste:contfil = 0;contcol = -3;pasa_esquina=false;	break;
+				*/
+			}
+
+
+			hay_info=false;
+			brujula_falsa=norte;
+
+
+		}
+
+	
+//*/
+
+
+
+	
 	 if(sensores.terreno[0] == 'K'){
 		
 		tengo_bikini= true;
@@ -133,15 +400,11 @@ Action ComportamientoJugador::think(Sensores sensores)
 		memori.push_back(nuevo); 
  	}
 
-	 //Pre guardar el mapa
-
 	
 
 
 
 
-
-	 
      
 	 //Guardar en el mapa
 	if (bien_situado){
@@ -339,7 +602,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 	}
 
-	if (current_state.fil == 99 and g_encontrado and  (sensores.terreno[2]!= 'M') and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+	if (sensores.posF == -1 and g_encontrado and  (sensores.terreno[2]!= 'M') and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
 		cout << "VOY casilla G"<< endl;
 		switch(g){
 			case 1: 
@@ -526,13 +789,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 	if ( (sensores.bateria < sensores.tiempo) && (sensores.terreno[0]== 'X') ){
 		accion = actIDLE;
 	}
-		if ((sensores.terreno[0]== 'G' and !bien_situado) or (sensores.nivel==0 and !bien_situado)){
-		current_state.fil = sensores.posF;
-		current_state.col = sensores.posC;
-		current_state.brujula = sensores.sentido;
-		cout << "Me ubico" << endl;
-		bien_situado = true;
-	}
+
 
 	//RETURN
 	last_action=accion;
