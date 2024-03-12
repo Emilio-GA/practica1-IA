@@ -341,33 +341,280 @@ Action ComportamientoJugador::think(Sensores sensores)
 						}
 					}
 				}	
-					/*					 
-					for (int i=0; i<mapaPreResultado.size()*mapaPreResultado.size(); i++){
+	
+				break;
 
+				
+				case noreste: 
+				
+				for (int x=max_size; x > mapaPreResultado.size(); x--){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;
+							int sol_x=0, sol_y=0;
+							while(resto_x != 0 and resto_y != 0){
+								if(resto_x<0 && resto_y<0){
+									sol_x--;
+									resto_x++;
+									resto_y++;
+								}else if(resto_x>0 && resto_y>0){
+									sol_x++;
+									resto_x--;
+									resto_y--;
+								}else if(resto_x<0 && resto_y>0){
+									sol_y++;
+									resto_x++;
+									resto_y--;
 
-						if(mapaResultado[current_state.fil+resto_x][current_state.col+resto_y]  == '?' ){
-							mapaResultado[current_state.fil+resto_x][current_state.col+resto_y] = mapaPreResultado[x][y];
-						}	
+								}else if(resto_x>0 && resto_y<0){
+									sol_y--;
+									resto_x--;
+									resto_y++;
+								}else if(resto_x==0 && resto_y<0){
+									sol_x--;
+									sol_y--;
+								
+									resto_y++;
+								}else if(resto_x==0 && resto_y>0){
+									sol_x++;
+
+									sol_y++;
+									resto_y--;
+								}else if(resto_x>0 && resto_y==0){
+									sol_x++;
+									resto_x--;
+									sol_y--;
+								}else if(resto_x<0 && resto_y==0){
+									sol_x--;
+									sol_y++;
+									resto_x++;
+								
+								}
+							}
+
+							if(mapaResultado[current_state.fil+sol_x][current_state.col+sol_y]  == '?' ){
+								cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+sol_x][current_state.col+sol_y] = mapaPreResultado[x][y];
+							}			
+						}
 					}
-					*/
+				}					
 				
 				
 				
 				
 				break;
-
-
-
-
-				/*
-				case noreste: contfil = -3;contcol = 0;pasa_esquina=false;	break;
+				
 				case este:    contfil= -3; contcol = +3;	break;
-				case sureste: contfil = 0;contcol = +3;pasa_esquina=false;	break;
-				case sur:     contfil = contcol = +3;	break;
-				case suroeste:contfil = +3;contcol = 0;pasa_esquina=false;	break;
-				case oeste:   contfil= +3; contcol = -3;	break;
-				case noroeste:contfil = 0;contcol = -3;pasa_esquina=false;	break;
-				*/
+				case sureste: 				for (int x=max_size; x > mapaPreResultado.size(); x--){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;
+							int sol_x=0, sol_y=0;
+							while(resto_x != 0 and resto_y != 0){
+								if(resto_x<0 && resto_y<0){
+									sol_y++;
+									resto_x++;
+									resto_y++;
+								}else if(resto_x>0 && resto_y>0){
+									sol_y--;
+									resto_x--;
+									resto_y--;
+								}else if(resto_x<0 && resto_y>0){
+									sol_x++;
+									resto_x++;
+									resto_y--;
+
+								}else if(resto_x>0 && resto_y<0){
+									sol_x--;
+									resto_x--;
+									resto_y++;
+								}else if(resto_x==0 && resto_y<0){
+									sol_x--;
+									sol_y++;
+								
+									resto_y++;
+								}else if(resto_x==0 && resto_y>0){
+									sol_x++;
+									sol_y--;
+
+									resto_y--;
+								}else if(resto_x>0 && resto_y==0){
+									sol_x--;
+									resto_x--;
+									sol_y--;
+								}else if(resto_x<0 && resto_y==0){
+									sol_x++;
+									sol_y++;
+									resto_x++;
+								
+								}
+							}
+
+							if(mapaResultado[current_state.fil+sol_x][current_state.col+sol_y]  == '?' ){
+								cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+sol_x][current_state.col+sol_y] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}					
+				
+				
+				
+				break;
+				case sur: 
+
+				for (int x=max_size; x > mapaPreResultado.size(); x--){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;	
+							if(mapaResultado[current_state.fil-resto_x][current_state.col-resto_y]  == '?' ){
+								cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil-resto_x][current_state.col-resto_y] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}					
+				
+				
+								
+				
+				
+				
+				break;
+				case suroeste: 
+				
+				for (int x=max_size; x > mapaPreResultado.size(); x--){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;
+							int sol_x=0, sol_y=0;
+							while(resto_x != 0 and resto_y != 0){
+								if(resto_x<0 && resto_y<0){
+									sol_x++;
+									resto_x++;
+									resto_y++;
+								}else if(resto_x>0 && resto_y>0){
+									sol_x--;
+									resto_x--;
+									resto_y--;
+								}else if(resto_x<0 && resto_y>0){
+									sol_y--;
+									resto_x++;
+									resto_y--;
+
+								}else if(resto_x>0 && resto_y<0){
+									sol_y++;
+									resto_x--;
+									resto_y++;
+								}else if(resto_x==0 && resto_y<0){
+									sol_x++;
+									sol_y++;
+								
+									resto_y++;
+								}else if(resto_x==0 && resto_y>0){
+									sol_x--;
+
+									sol_y--;
+									resto_y--;
+								}else if(resto_x>0 && resto_y==0){
+									sol_x--;
+									resto_x--;
+									sol_y++;
+								}else if(resto_x<0 && resto_y==0){
+									sol_x++;
+									sol_y--;
+									resto_x++;
+								
+								}
+							}
+
+							if(mapaResultado[current_state.fil+sol_x][current_state.col+sol_y]  == '?' ){
+								cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+sol_x][current_state.col+sol_y] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}					
+				
+				
+				
+				break;
+				case oeste:  
+				
+
+				case noroeste:				for (int x=max_size; x > mapaPreResultado.size(); x--){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;
+							int sol_x=0, sol_y=0;
+							while(resto_x != 0 and resto_y != 0){
+								if(resto_x<0 && resto_y<0){
+									sol_y--;
+									resto_x++;
+									resto_y++;
+								}else if(resto_x>0 && resto_y>0){
+									sol_y++;
+									resto_x--;
+									resto_y--;
+								}else if(resto_x<0 && resto_y>0){
+									sol_x--;
+									resto_x++;
+									resto_y--;
+
+								}else if(resto_x>0 && resto_y<0){
+									sol_x++;
+									resto_x--;
+									resto_y++;
+								}else if(resto_x==0 && resto_y<0){
+									sol_x++;
+									sol_y--;
+								
+									resto_y++;
+								}else if(resto_x==0 && resto_y>0){
+									sol_x--;
+									sol_y++;
+
+									resto_y--;
+								}else if(resto_x>0 && resto_y==0){
+									sol_x++;
+									resto_x--;
+									sol_y++;
+								}else if(resto_x<0 && resto_y==0){
+									sol_x--;
+									sol_y--;
+									resto_x++;
+								
+								}
+							}
+
+							if(mapaResultado[current_state.fil+sol_x][current_state.col+sol_y]  == '?' ){
+								cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+sol_x][current_state.col+sol_y] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}					
+				
+				
+				
+				break;	
+				
 			}
 
 
