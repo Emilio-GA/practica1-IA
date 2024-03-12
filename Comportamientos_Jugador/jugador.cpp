@@ -11,7 +11,14 @@ Action ComportamientoJugador::think(Sensores sensores)
 	// Actualización del mundo
 	
 	cout << "ACTUALIZACIÓN"<< endl;
-	cout << "CONT = " << (int)cont << endl;
+
+	if(sensores.reset ==true){
+		cout << "ME CHOCO Y NO SE DONDE ESTOY" << endl;
+		bien_situado=false;
+	}
+
+	//cout << "CONT = " << (int)cont << endl;
+
 	int contfil= 0,contcol = 0;
 	bool pasa_esquina =false;
 	bool encontrado=false;
@@ -20,6 +27,8 @@ Action ComportamientoJugador::think(Sensores sensores)
 	bool g_encontrado= false, k_encontrado= false, d_encontrado= false;
 	
 
+
+	
 	if(bien_situado){
 		switch (last_action){
 
@@ -105,13 +114,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 		}
 	}
 
-	if ((sensores.terreno[0]== 'G' and !bien_situado) or (sensores.nivel==0 and !bien_situado)){
-		current_state.fil = sensores.posF;
-		current_state.col = sensores.posC;
-		current_state.brujula = sensores.sentido;
-		
-		bien_situado = true;
-	}
+
 	 //Memoria
 	 if(sensores.terreno[0] == 'K'){
 		
@@ -144,7 +147,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 	if (bien_situado){
 		for (int i=0; i<sensores.terreno.size(); i++){
 
-			mapaResultado[current_state.fil+contfil][current_state.col+contcol] = sensores.terreno[i];
+
+			if(mapaResultado[current_state.fil+contfil][current_state.col+contcol]  == '?' ){
+				mapaResultado[current_state.fil+contfil][current_state.col+contcol] = sensores.terreno[i];
+			}
 
 
 
@@ -258,7 +264,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 	cout << "\nColision: " << sensores.colision;
 	cout << "  Reset: " << sensores.reset;
 	cout << "  Vida: " << sensores.vida << endl<< endl;
-
+	
+	/*if(sensores.colision ==true){
+		bien_situado=false;
+	}*/
 
 
 	//Decidir acción
@@ -330,7 +339,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 	}
 
-	if (current_state.fil == 99 and g_encontrado and  (sensores.terreno[2]!= 'M')and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+	if (current_state.fil == 99 and g_encontrado and  (sensores.terreno[2]!= 'M') and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
 		cout << "VOY casilla G"<< endl;
 		switch(g){
 			case 1: 
@@ -365,8 +374,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 		prioridad=true;
 	}
 
+	//cout << "CONDICIONES:  "<< 	tengo_bikini <<"  " <<	prioridad <<"  " 	<< k_encontrado <<"  "<<sensores.terreno[2]  << "  "<<sensores.terreno[1]  << "  "<<sensores.terreno[3]  << "  "  << endl;
 
-	if((tengo_bikini==false) && (prioridad ==false) && (k_encontrado==true)and  (sensores.terreno[2]!= 'M')and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+
+	if((tengo_bikini==false) && (prioridad ==false) && (k_encontrado==true) &&  (sensores.terreno[2] != 'M') &&  (sensores.terreno[1] != 'M') && (sensores.terreno[3] != 'M')){
 		cout << "VOY casilla k"<< endl;
 		switch(k){
 			case 1: 
@@ -423,8 +434,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			case 11:
 			case 12:
 			case 13: 
-			case 14:
-			¡
+			case 14:			
 			if(sensores.agentes[2]== '_' ){
 				accion= actWALK;
 			}else{accion =actIDLE;}
@@ -452,7 +462,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			and ((encontrado==false) or (cont_malasuerte<=0) )){
 			//cout << "ANDO NORMAL"<< (bool)tengo_zapatos<< "  "<<  cont_malasuerte<<endl;
 			accion = actWALK;
-			cont_malasuerte= 4+(rand()%(8-4));
+			cont_malasuerte= 3+(rand()%(5-3));
 		}else if(encontrado == true){
 			cout << "ENCUENTRO CASILLA REPE"<< endl;
 			accion = actTURN_SR;
@@ -468,7 +478,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			if(cont_malasuerte<=0 and sensores.terreno[2] != 'P' and sensores.terreno[2] != 'M'  and sensores.agentes[2]== '_'){
 				cout << "ANDO POR LA MALA SUERTE"<< endl;
 			accion = actWALK;
-			cont_malasuerte= 4 +(rand()%(8-4));
+			cont_malasuerte= 3+(rand()%(5-3));
 			}
 			cont_malasuerte--;
 
@@ -504,7 +514,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			
 			}*/
 			
-			
+		
 			//derecha= (rand()%2 ==0);
 			cont_malasuerte--;
 
@@ -515,6 +525,13 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 	if ( (sensores.bateria < sensores.tiempo) && (sensores.terreno[0]== 'X') ){
 		accion = actIDLE;
+	}
+		if ((sensores.terreno[0]== 'G' and !bien_situado) or (sensores.nivel==0 and !bien_situado)){
+		current_state.fil = sensores.posF;
+		current_state.col = sensores.posC;
+		current_state.brujula = sensores.sentido;
+		cout << "Me ubico" << endl;
+		bien_situado = true;
 	}
 
 	//RETURN
