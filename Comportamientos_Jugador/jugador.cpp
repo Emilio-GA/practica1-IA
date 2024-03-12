@@ -9,11 +9,16 @@ Action ComportamientoJugador::think(Sensores sensores)
 	Action accion = actIDLE;
 
 	// Actualización del mundo
-
+	
 	cout << "ACTUALIZACIÓN"<< endl;
+	cout << "CONT = " << (int)cont << endl;
 	int contfil= 0,contcol = 0;
 	bool pasa_esquina =false;
-	bool encontrado;
+	bool encontrado=false;
+	bool prioridad = false;
+	int g=0, k=0, d=0;
+	bool g_encontrado= false, k_encontrado= false, d_encontrado= false;
+	
 
 	if(bien_situado){
 		switch (last_action){
@@ -117,13 +122,21 @@ Action ComportamientoJugador::think(Sensores sensores)
 		tengo_zapatos= true;
 	 }
      
-	 if(bien_situado){
+	if(bien_situado){
 		almacen nuevo;
 		nuevo.fil = current_state.fil;
 		nuevo.col = current_state.col;
 		nuevo.letra =sensores.terreno[0];
 		memori.push_back(nuevo); 
-	 }
+ 	}
+
+	 //Pre guardar el mapa
+
+	
+
+
+
+
 
 	 
      
@@ -133,8 +146,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 			mapaResultado[current_state.fil+contfil][current_state.col+contcol] = sensores.terreno[i];
 
-           cout << "LO QUE HAY  " << sensores.terreno[i] << "  LO QUE GUARDO  " << mapaResultado[current_state.fil+contfil][current_state.col+contcol] << endl;
-		   cout << "DONDE ESTA  " << i << "  DONDE LO GUARDO  " << current_state.fil+contfil<< "   " <<current_state.col+contcol << endl;
+
+
+           //cout << "LO QUE HAY  " << sensores.terreno[i] << "  LO QUE GUARDO  " << mapaResultado[current_state.fil+contfil][current_state.col+contcol] << endl;
+		   //cout << "DONDE ESTA  " << i << "  DONDE LO GUARDO  " << current_state.fil+contfil<< "   " <<current_state.col+contcol << endl;
 
 			if (i == 0){
 
@@ -291,26 +306,220 @@ Action ComportamientoJugador::think(Sensores sensores)
 	}
 
 	cout << "DECIDIR"<< endl;
-	if ((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or sensores.terreno[2] == 'G' or sensores.terreno[2] == 'K' or sensores.terreno[2] == 'D' or sensores.terreno[2] == 'X' or
-		(sensores.terreno[2] == 'A' and tengo_bikini) or (sensores.terreno[2] == 'B' and tengo_zapatos)or (cont_malasuerte<=0 and sensores.terreno[2] != 'P' and sensores.terreno[2] != 'M') )
-	 and (sensores.agentes[2]== '_') and (encontrado==false or cont_malasuerte<=0 )){
-		accion = actWALK;
-		cont_malasuerte=8;
-	}else if (!derecha){
-		accion= actTURN_L;
-		derecha = (rand()%2 == 0);
-		cont_malasuerte--;
-	}else{
-		accion = actTURN_SR;
-		derecha= (rand()%2 ==0);
-		cont_malasuerte--;
+
+	//PRIORIDADES
+		cout << "PRIORIDAD"<< endl;
+	
+    for ( int i=0; i<sensores.terreno.size() ; i++){
+
+		if (sensores.terreno[i] == 'G' and g_encontrado==false){
+			g_encontrado= true;
+			g=i;
+			cout << "veo casilla G"<< endl;
+		}
+		if (sensores.terreno[i] == 'K' and k_encontrado==false){
+			k_encontrado= true;
+			k=i;
+			cout << "veo casilla K"<< endl;
+		}
+		if (sensores.terreno[i] == 'D' and d_encontrado==false){
+			d_encontrado= true;
+			d=i;
+			cout << "veo casilla D"<< endl;
+		}
 
 	}
-    encontrado=false;
+
+	if (current_state.fil == 99 and g_encontrado and  (sensores.terreno[2]!= 'M')and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+		cout << "VOY casilla G"<< endl;
+		switch(g){
+			case 1: 
+			case 4:
+			case 9:
+			accion= actTURN_L;
+			break;
+
+			case 3: 
+			case 8:
+			case 15:
+			accion= actTURN_SR;
+			break;
+
+			case 2: 
+			case 5:
+			case 6:
+			case 7: 
+			case 10:
+			case 11:
+			case 12:
+			case 13: 
+			case 14:
+			if(sensores.agentes[2]== '_'){
+				accion= actWALK;
+			}else{accion =actIDLE;}
+			
+			break;
+
+
+		}
+		prioridad=true;
+	}
+
+
+	if((tengo_bikini==false) && (prioridad ==false) && (k_encontrado==true)and  (sensores.terreno[2]!= 'M')and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+		cout << "VOY casilla k"<< endl;
+		switch(k){
+			case 1: 
+			case 4:
+			case 9:
+			accion= actTURN_L;
+			break;
+
+			case 3: 
+			case 8:
+			case 15:
+			accion= actTURN_SR;
+			break;
+
+			case 2: 
+			case 5:
+			case 6:
+			case 7: 
+			case 10:
+			case 11:
+			case 12:
+			case 13: 
+			case 14:
+			if(sensores.agentes[2]== '_' && sensores.terreno[2]!= 'M'){
+				accion= actWALK;
+			}else{accion =actIDLE;}
+			break;
+
+		}
+		prioridad=true;
+	}
+	//cout << "CONDICIONES:  "<< 	tengo_bikini <<"  " <<	prioridad <<"  " 	<< k_encontrado <<"  " << endl;
+
+	if((prioridad == false) && (d_encontrado==true) && (tengo_zapatos==false)and  (sensores.terreno[2]!= 'M')and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+		cout << "VOY casilla D"<< endl;
+		switch(d){
+			case 1: 
+			case 4:
+			case 9:
+			accion= actTURN_L;
+			break;
+
+			case 3: 
+			case 8:
+			case 15:
+			accion= actTURN_SR;
+			break;
+
+			case 2: 
+			case 5:
+			case 6:
+			case 7: 
+			case 10:
+			case 11:
+			case 12:
+			case 13: 
+			case 14:
+			¡
+			if(sensores.agentes[2]== '_' ){
+				accion= actWALK;
+			}else{accion =actIDLE;}
+			break;
+
+
+		}
+		prioridad=true;
+	}
+	
+	
+
+	
+
+	
+
+	if(prioridad==false){
+
+		cout << "NO hay prioridad"<< endl;
+		if ((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or sensores.terreno[2] == 'G' or sensores.terreno[2] == 'K' or sensores.terreno[2] == 'D' or sensores.terreno[2] == 'X' or
+			((sensores.terreno[2] == 'A') and (tengo_bikini==true)) or ((sensores.terreno[2] == 'B') and (tengo_zapatos==true)) or ((cont_malasuerte<=0) and (sensores.terreno[2] != 'P') and (sensores.terreno[2] != 'M') ))
+			
+			and (sensores.agentes[2]== '_')
+			
+			and ((encontrado==false) or (cont_malasuerte<=0) )){
+			//cout << "ANDO NORMAL"<< (bool)tengo_zapatos<< "  "<<  cont_malasuerte<<endl;
+			accion = actWALK;
+			cont_malasuerte= 4+(rand()%(8-4));
+		}else if(encontrado == true){
+			cout << "ENCUENTRO CASILLA REPE"<< endl;
+			accion = actTURN_SR;
+			if (last_action==actTURN_SR){
+				accion = actTURN_L;
+				cont++;
+				cout << "GIRO A LA IZQ Y CONT = " << cont << endl;
+				//if(cont >=2){
+			//		accion= actTURN_SR;
+			//		cont=0;
+			//	}
+			}
+			if(cont_malasuerte<=0 and sensores.terreno[2] != 'P' and sensores.terreno[2] != 'M'  and sensores.agentes[2]== '_'){
+				cout << "ANDO POR LA MALA SUERTE"<< endl;
+			accion = actWALK;
+			cont_malasuerte= 4 +(rand()%(8-4));
+			}
+			cont_malasuerte--;
+
+		} else if (!derecha){
+			cout << "GIRO IZQ"<< endl;
+			cout << "CONT = " << (int)cont << endl;
+			accion= actTURN_L;
+			cont++;
+			if ((last_action == actTURN_L) && (cont >= 2)){
+		
+				derecha = true;
+				//derecha= (rand()%2 ==0);
+				//cont = 2;
+			
+
+			}
+			//derecha = (rand()%2 == 0);
+			cont_malasuerte--;
+		}else{
+			cout << "GIRO DER"<< endl;
+			accion = actTURN_SR;
+			cont= 0;
+			if ((last_action== actTURN_SR) && (cont <= 0)){
+				derecha == false;
+				//derecha= (rand()%2 ==0);
+
+			
+			}/*
+			if ( (cont <= 0)){
+				derecha = false;
+				//derecha= (rand()%2 ==0);
+
+			
+			}*/
+			
+			
+			//derecha= (rand()%2 ==0);
+			cont_malasuerte--;
+
+		}
+	}
+	
+	//encontrado=false;
+
+	if ( (sensores.bateria < sensores.tiempo) && (sensores.terreno[0]== 'X') ){
+		accion = actIDLE;
+	}
 
 	//RETURN
 	last_action=accion;
-	cout << "   ACCION ELEGIDA  "  << accion << endl;
+	cout << ""<< endl;
 	return accion;
 }
 

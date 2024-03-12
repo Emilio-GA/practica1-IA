@@ -26,9 +26,10 @@ class ComportamientoJugador : public Comportamiento{
      current_state.brujula= norte;
      derecha = false;
      bien_situado = false;
-     bool tengo_bikini= false;
-     bool tengo_zapatos= false;
-     int cont_malasuerte = 8;
+     tengo_bikini = false;
+     tengo_zapatos = false;
+     cont_malasuerte = 5;
+     cont = 0;
 
 
     }
@@ -49,6 +50,7 @@ class ComportamientoJugador : public Comportamiento{
   bool tengo_zapatos;
   int cont_malasuerte;
   vector <almacen> memori;
+  double cont;
   
 };
 #endif
