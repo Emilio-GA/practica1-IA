@@ -26,11 +26,13 @@ Action ComportamientoJugador::think(Sensores sensores)
 	int contfil= 0,contcol = 0;
 	bool valido = false;
 	bool pasa_esquina =false;
-	bool encontrado=false;
+	int  encontrado=0;
 	bool prioridad = false;
 	int g=0, k=0, d=0;
 	bool g_encontrado= false, k_encontrado= false, d_encontrado= false;
 	int  resto_x = 0, resto_y =0;
+	int sol_x=0, sol_y=0;
+
 	
 
 
@@ -230,8 +232,8 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 
 
-			cout << "LO QUE HAY  " << sensores.terreno[i] << "  LO QUE GUARDO  " << mapaPreResultado[current_state.fil+contfil][current_state.col+contcol] << endl;
-			cout << "DONDE ESTA  " << i << "  DONDE LO GUARDO  " << current_state.fil+contfil<< "   " <<current_state.col+contcol << endl;
+			//cout << "LO QUE HAY  " << sensores.terreno[i] << "  LO QUE GUARDO  " << mapaPreResultado[current_state.fil+contfil][current_state.col+contcol] << endl;
+			//cout << "DONDE ESTA  " << i << "  DONDE LO GUARDO  " << current_state.fil+contfil<< "   " <<current_state.col+contcol << endl;
 
 				if (i == 0){
 
@@ -323,10 +325,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 
 
-			switch (brujula_falsa){
+			switch (sensores.sentido){
 
 				case norte:
-				cout << "brujala al norte  "<<valido << " size " << mapaPreResultado.size() << endl;
+				cout << "brujala al norte  "<<endl;
 				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
@@ -346,8 +348,9 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 				
 				case noreste: 
+				cout << "brujala al noreste "<<endl;
 				
-				for (int x=max_size; x > mapaPreResultado.size(); x--){
+				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
@@ -408,8 +411,28 @@ Action ComportamientoJugador::think(Sensores sensores)
 				
 				break;
 				
-				case este:    contfil= -3; contcol = +3;	break;
-				case sureste: 				for (int x=max_size; x > mapaPreResultado.size(); x--){
+				case este:  
+				cout << "brujala al este "<<endl; 
+
+				for (int x=0; x < mapaPreResultado.size(); x++){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;	
+							if(mapaResultado[current_state.fil+resto_y][current_state.col-resto_x]  == '?' ){
+								cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+resto_y][current_state.col-resto_x] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}					
+				
+					break;
+				case sureste: 
+				cout << "brujala al sureste "<<endl;		
+				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
@@ -469,8 +492,9 @@ Action ComportamientoJugador::think(Sensores sensores)
 				
 				break;
 				case sur: 
+				cout << "brujala al sur "<<endl;
 
-				for (int x=max_size; x > mapaPreResultado.size(); x--){
+				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
@@ -492,14 +516,15 @@ Action ComportamientoJugador::think(Sensores sensores)
 				
 				break;
 				case suroeste: 
+				cout << "brujala al suroeste "<<endl;
 				
-				for (int x=max_size; x > mapaPreResultado.size(); x--){
+				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
 							//cout << "dentro del if" << endl;
-							resto_x= x - ultimo_fil;
-							resto_y= y - ultimo_col;
+							resto_x= x - ultimo_fil+1;
+							resto_y= y - ultimo_col+1;
 							int sol_x=0, sol_y=0;
 							while(resto_x != 0 and resto_y != 0){
 								if(resto_x<0 && resto_y<0){
@@ -540,10 +565,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 								
 								}
 							}
-
-							if(mapaResultado[current_state.fil+sol_x][current_state.col+sol_y]  == '?' ){
-								cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
-								mapaResultado[current_state.fil+sol_x][current_state.col+sol_y] = mapaPreResultado[x][y];
+							cout << "copio en " << current_state.fil-sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;	
+							if(mapaResultado[current_state.fil-sol_x][current_state.col-sol_y]  == '?' ){
+								
+								mapaResultado[current_state.fil-sol_x][current_state.col-sol_y] = mapaPreResultado[x][y];
 							}			
 						}
 					}
@@ -553,9 +578,37 @@ Action ComportamientoJugador::think(Sensores sensores)
 				
 				break;
 				case oeste:  
+				cout << "brujala al oeste "<<endl;
+
+				for (int x=0; x < mapaPreResultado.size(); x++){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil;
+							resto_y= y - ultimo_col;	
+							cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;	
+
+							if(mapaResultado[current_state.fil-resto_y][current_state.col+resto_x]  == '?' ){
+								//cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil-resto_y][current_state.col+resto_x] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}					
+				
+				
+								
+				
+				
+				
+				break; 
 				
 
-				case noroeste:				for (int x=max_size; x > mapaPreResultado.size(); x--){
+				case noroeste:
+				/*
+				cout << "brujala al noroeste "<<endl;		
+				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
@@ -609,14 +662,87 @@ Action ComportamientoJugador::think(Sensores sensores)
 							}			
 						}
 					}
-				}					
+				}	
+
+				*/
+
+				cout << "brujala al noroeste "<<endl;		
+				for (int x=0; x < mapaPreResultado.size(); x++){
+					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
+						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
+						if(mapaPreResultado[x][y]  != '?' ){
+							//cout << "dentro del if" << endl;
+							resto_x= x - ultimo_fil+1;
+							resto_y= y - ultimo_col-1;
+							sol_x=0;
+							sol_y=0;
+							while(resto_x != 0 and resto_y != 0){
+								if(resto_x<0 && resto_y<0){
+									sol_y--;
+									resto_x++;
+									resto_y++;
+								}else if(resto_x>0 && resto_y>0){
+									sol_y++;
+									resto_x--;
+									resto_y--;
+								}else if(resto_x<0 && resto_y>0){
+									sol_x--;
+									resto_x++;
+									resto_y--;
+
+								}else if(resto_x>0 && resto_y<0){
+									sol_x++;
+									resto_x--;
+									resto_y++;
+								}else if(resto_x==0 && resto_y<0){
+									sol_x++;
+									sol_y--;
+								
+									resto_y++;
+								}else if(resto_x==0 && resto_y>0){
+									sol_x--;
+									sol_y++;
+
+									resto_y--;
+								}else if(resto_x>0 && resto_y==0){
+									sol_x++;
+									resto_x--;
+									sol_y++;
+								}else if(resto_x<0 && resto_y==0){
+									sol_x--;
+									sol_y--;
+									resto_x++;
+								
+								}
+							}
+
+							if(mapaResultado[current_state.fil-sol_x][current_state.col-sol_y]  == '?' ){
+								cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil-sol_x][current_state.col-sol_y] = mapaPreResultado[x][y];
+							}			
+						}
+					}
+				}	
+			
 				
 				
 				
 				break;	
 				
 			}
+    		vector<unsigned char> aux(max_size, '?');
 
+			for (unsigned int i = 0; i < max_size; i++)
+     		{
+     			mapaPreResultado.pop_back();
+
+     		}
+    	 	
+     		for (unsigned int i = 0; i < max_size; i++)
+     		{
+     			mapaPreResultado.push_back(aux);
+
+     		}
 
 			hay_info=false;
 			brujula_falsa=norte;
@@ -625,7 +751,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 		}
 
 	
-//*/
+
 
 
 
@@ -644,6 +770,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 		nuevo.fil = current_state.fil;
 		nuevo.col = current_state.col;
 		nuevo.letra =sensores.terreno[0];
+		nuevo.ciclos = 0;
 		memori.push_back(nuevo); 
  	}
 
@@ -817,10 +944,15 @@ Action ComportamientoJugador::think(Sensores sensores)
 			col_siguiente--; 
 		break;
 	}
-
+	int tiempo=9999;
     for (int i = 0; i<memori.size();i++){
+		memori[i].ciclos++;
 		if ((sensores.terreno[2] == memori[i].letra) && (col_siguiente==memori[i].col) && (fil_siguiente==memori[i].fil)){
-			encontrado=true;
+			encontrado++;
+			
+			if (tiempo>memori[i].ciclos){
+				tiempo = memori[i].ciclos;
+			}
 		}
 	}
 
@@ -966,18 +1098,20 @@ Action ComportamientoJugador::think(Sensores sensores)
 		cout << "NO hay prioridad"<< endl;
 		if ((sensores.terreno[2] == 'T' or sensores.terreno[2] == 'S' or sensores.terreno[2] == 'G' or sensores.terreno[2] == 'K' or sensores.terreno[2] == 'D' or sensores.terreno[2] == 'X' or
 			((sensores.terreno[2] == 'A') and (tengo_bikini==true)) or ((sensores.terreno[2] == 'B') and (tengo_zapatos==true)) or ((cont_malasuerte<=0) and (sensores.terreno[2] != 'P') and (sensores.terreno[2] != 'M') ))
+
 			
 			and (sensores.agentes[2]== '_')
 			
-			and ((encontrado==false) or (cont_malasuerte<=0) )){
+			and ((encontrado<2 ) or ((cont_malasuerte<=0) and (tiempo > 10)) )	
+			){
 			//cout << "ANDO NORMAL"<< (bool)tengo_zapatos<< "  "<<  cont_malasuerte<<endl;
 			accion = actWALK;
 			cont_malasuerte= 3+(rand()%(5-3));
-		}else if(encontrado == true){
+		}/*else if(encontrado >= 1){
 			cout << "ENCUENTRO CASILLA REPE"<< endl;
 			accion = actTURN_SR;
-			if (last_action==actTURN_SR){
-				accion = actTURN_L;
+			if (last_action==actTURN_L){
+				accion = actTURN_SR;
 				cont++;
 				cout << "GIRO A LA IZQ Y CONT = " << cont << endl;
 				//if(cont >=2){
@@ -985,19 +1119,21 @@ Action ComportamientoJugador::think(Sensores sensores)
 			//		cont=0;
 			//	}
 			}
+			
 			if(cont_malasuerte<=0 and sensores.terreno[2] != 'P' and sensores.terreno[2] != 'M'  and sensores.agentes[2]== '_'){
 				cout << "ANDO POR LA MALA SUERTE"<< endl;
 			accion = actWALK;
 			cont_malasuerte= 3+(rand()%(5-3));
 			}
+			
 			cont_malasuerte--;
 
-		} else if (!derecha){
+		}*/ else if (!derecha){
 			cout << "GIRO IZQ"<< endl;
 			cout << "CONT = " << (int)cont << endl;
 			accion= actTURN_L;
 			cont++;
-			if ((last_action == actTURN_L) && (cont >= 2)){
+			if ((cont >= 2)){
 		
 				derecha = true;
 				//derecha= (rand()%2 ==0);
@@ -1011,12 +1147,13 @@ Action ComportamientoJugador::think(Sensores sensores)
 			cout << "GIRO DER"<< endl;
 			accion = actTURN_SR;
 			cont= 0;
+			/*
 			if ((last_action== actTURN_SR) && (cont <= 0)){
-				derecha == false;
+				derecha = false;
 				//derecha= (rand()%2 ==0);
 
 			
-			}/*
+			}
 			if ( (cont <= 0)){
 				derecha = false;
 				//derecha= (rand()%2 ==0);
@@ -1026,6 +1163,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			
 		
 			//derecha= (rand()%2 ==0);
+			derecha = false;
 			cont_malasuerte--;
 
 		}

@@ -13,6 +13,7 @@ struct almacen{
   int fil;
   int col;
   char letra;
+  int ciclos;
 };
 
 class ComportamientoJugador : public Comportamiento{
