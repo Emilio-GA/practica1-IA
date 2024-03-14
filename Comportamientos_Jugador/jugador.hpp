@@ -37,6 +37,7 @@ class ComportamientoJugador : public Comportamiento{
      brujula_falsa = norte;
      vector<unsigned char> aux(max_size, '?');
      hay_info=false;
+     perdidos_dos = false;
      for (unsigned int i = 0; i < max_size; i++)
      {
      mapaPreResultado.push_back(aux);
@@ -66,9 +67,11 @@ class ComportamientoJugador : public Comportamiento{
   double cont;
   Orientacion brujula_falsa;
   vector< vector< unsigned char> > mapaPreResultado;
+
   int max_size;
   bool hay_info;
-  int ultimo_fil=0;
-  int ultimo_col=0;
+  int ultimo_fil;
+  int ultimo_col;
+  bool perdidos_dos;
 };
 #endif
