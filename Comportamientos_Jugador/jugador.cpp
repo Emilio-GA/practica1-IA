@@ -357,9 +357,9 @@ Action ComportamientoJugador::think(Sensores sensores)
 		if(bien_situado && hay_info){
 			cout << "DENTRO DE volcado"<< endl;
 
-				switch (current_state.brujula){
+			switch (current_state.brujula){
 					case norte: 
-					ajuste_x--; 
+						ajuste_x--; 
 					break;
 					case noreste: 
 						ajuste_x--; 
@@ -391,7 +391,20 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 
 
-			switch (abs(sensores.sentido-brujula_falsa)){
+			cout << ajuste_x<< "	" << ajuste_y<<endl;
+
+			int cambio =(sensores.sentido-brujula_falsa);
+			if (cambio<0){
+				cambio = cambio+8;
+			}
+			
+
+
+			cout <<  "					MIRANDO A " << cambio<<endl;
+			
+			
+
+			switch (cambio){
 
 				case norte:
 				cout << "							brujala al norte  "<<endl;
@@ -478,18 +491,18 @@ Action ComportamientoJugador::think(Sensores sensores)
 				break;
 				
 				case este:  
-				cout << "brujala al este "<<endl; 
+				cout << "				brujala al este "<<endl; 
 
 				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
 							//cout << "dentro del if" << endl;
-							resto_x= x - ultimo_fil-ajuste_x;
+							resto_x= x - ultimo_fil+ajuste_x;
 							resto_y= y - ultimo_col-ajuste_y;	
-							if(mapaResultado[current_state.fil+resto_y][current_state.col-resto_x]  == '?' ){
-								cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
-								mapaResultado[current_state.fil+resto_y][current_state.col-resto_x] = mapaPreResultado[x][y];
+							if(mapaResultado[current_state.fil+resto_y][current_state.col+resto_x]  == '?' ){
+								//cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								mapaResultado[current_state.fil+resto_y][current_state.col+resto_x] = mapaPreResultado[x][y];
 							}			
 						}
 					}
@@ -558,17 +571,17 @@ Action ComportamientoJugador::think(Sensores sensores)
 				
 				break;
 				case sur: 
-				cout << "brujala al sur "<<endl;
+				cout << "		brujala al sur "<<endl;
 
 				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
 							//cout << "dentro del if" << endl;
-							resto_x= x - ultimo_fil-ajuste_x;
-							resto_y= y - ultimo_col-ajuste_y;	
+							resto_x= (x - ultimo_fil)+ajuste_x;
+							resto_y= (y - ultimo_col)+ajuste_y;	
 							if(mapaResultado[current_state.fil-resto_x][current_state.col-resto_y]  == '?' ){
-								cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
+								//cout << "copio en " << current_state.fil+resto_x<<"  "<<current_state.col+resto_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;
 								mapaResultado[current_state.fil-resto_x][current_state.col-resto_y] = mapaPreResultado[x][y];
 							}			
 						}
@@ -644,15 +657,15 @@ Action ComportamientoJugador::think(Sensores sensores)
 				
 				break;
 				case oeste:  
-				cout << "brujala al oeste "<<endl;
+				cout << "					brujala al oeste "<<endl;
 
 				for (int x=0; x < mapaPreResultado.size(); x++){
 					for(int y =0 ; y < mapaPreResultado[0].size(); y++){
 						//cout << "dentro de los for y compruebo esto: "<< mapaPreResultado[x][y] << "en la posicion "<< x<< "  "<<y << endl;
 						if(mapaPreResultado[x][y]  != '?' ){
 							//cout << "dentro del if" << endl;
-							resto_x= x - ultimo_fil-ajuste_x;
-							resto_y= y - ultimo_col-ajuste_y;	
+							resto_x= (x - ultimo_fil)+ajuste_x;
+							resto_y= (y - ultimo_col)-ajuste_y;	
 							//cout << "copio en " << current_state.fil+sol_x<<"  "<<current_state.col+sol_y <<  "  esto: "<< mapaPreResultado[x][y]<<endl;	
 
 							if(mapaResultado[current_state.fil-resto_y][current_state.col+resto_x]  == '?' ){
