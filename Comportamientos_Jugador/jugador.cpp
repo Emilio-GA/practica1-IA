@@ -38,7 +38,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 	int sol_x=0, sol_y=0;
 	bool hueco_encontrado = false;
 	int ajuste_x=0, ajuste_y=0;
-	
+	int tiempo=9999;
 
 
 	
@@ -990,6 +990,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 	//Decidir acción
 
 	//No repetir
+	if(bien_situado){
 	int fil_siguiente=current_state.fil;
 	int col_siguiente=current_state.col;
 
@@ -1024,7 +1025,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			col_siguiente--; 
 		break;
 	}
-	int tiempo=9999;
+	
     for (int i = 0; i<memori.size();i++){
 		memori[i].ciclos++;
 		if ((sensores.terreno[2] == memori[i].letra) && (col_siguiente==memori[i].col) && (fil_siguiente==memori[i].fil)){
@@ -1037,6 +1038,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 	}
 
 	cout << "DECIDIR"<< endl;
+	}
 
 	//PRIORIDADES
 		cout << "PRIORIDAD"<< endl;
@@ -1067,15 +1069,274 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 
 
-			
-
-
-
 		
 
 	}
 
-	if (sensores.posF == -1 and g_encontrado and  (sensores.terreno[2]!= 'M') and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M')){
+/*
+
+Orientacion brujula_prue;
+
+	if (bien_situado && prioridad == false){
+	brujula_prue = current_state.brujula;
+	}else { 
+		brujula_prue = brujula_falsa;
+	}
+
+
+
+
+	int fil_siguiente=current_state.fil;
+	int col_siguiente=current_state.col;
+
+	switch (brujula_prue){
+		case norte: 
+			fil_siguiente--; 
+		break;
+		case noreste: 
+			fil_siguiente--; 
+			col_siguiente++;
+		break;
+		case este: 
+			col_siguiente++; 
+		break;
+		case sureste: 
+			fil_siguiente++; 
+			col_siguiente++;
+		break;
+		case sur: 
+			fil_siguiente++;
+					
+		break;
+		case suroeste: 
+			fil_siguiente++; 
+			col_siguiente--; 
+		break;
+		case oeste: 
+			col_siguiente--; 
+		break;
+		case noroeste: 
+			fil_siguiente--; 
+			col_siguiente--; 
+		break;
+	}
+	if(bien_situado){
+	if (mapaResultado[current_state.fil+fil_siguiente][current_state.col+col_siguiente] == 'G' and g_encontrado==false){
+		g_encontrado= true;
+		g=2;
+		cout << "veo casilla G"<< endl;
+	}
+	if (mapaResultado[current_state.fil+fil_siguiente][current_state.col+col_siguiente] == 'K' and k_encontrado==false){
+		k_encontrado= true;
+		k=2;
+		cout << "veo casilla K"<< endl;
+	}
+	if (mapaResultado[current_state.fil+fil_siguiente][current_state.col+col_siguiente] == 'D' and d_encontrado==false){
+		d_encontrado= true;
+		d=2;
+		cout << "veo casilla D"<< endl;
+	}
+	}else{
+	if (mapaPreResultado[current_state.fil+fil_siguiente][current_state.col+col_siguiente] == 'G' and g_encontrado==false){
+		g_encontrado= true;
+		g=2;
+		cout << "veo casilla G"<< endl;
+	}
+	if (mapaPreResultado[current_state.fil+fil_siguiente][current_state.col+col_siguiente] == 'K' and k_encontrado==false){
+		k_encontrado= true;
+		k=2;
+		cout << "veo casilla K"<< endl;
+	}
+	if (mapaPreResultado[current_state.fil+fil_siguiente][current_state.col+col_siguiente] == 'D' and d_encontrado==false){
+		d_encontrado= true;
+		d=2;
+		cout << "veo casilla D"<< endl;
+	}
+
+
+	}	
+*/  
+
+
+
+
+
+//SALIR DLE MURO
+/*	if (bien_situado){
+
+	bool muro_cerca =false;
+	vector <int>  mayor_encontrado(sensores.terreno.size(),0);
+	int m=2, menor=9999;
+
+
+	for (int i = 0; i< sensores.terreno.size() ; i++){
+		
+		if(sensores.terreno[i]== 'M'){
+			mayor_encontrado[i]=999;
+			muro_cerca = true;
+		}
+	}
+	if (muro_cerca==true){
+	
+		for (int i = 0; i< memori.size() ; i++){
+
+			
+			for (int j= 0; j < sensores.terreno.size(); j++){
+
+				if((sensores.terreno[j] == memori[i].letra) && ((current_state.col+contcol)==memori[i].col) && (current_state.fil+contfil==memori[i].fil)){
+					mayor_encontrado[j]++;
+				}
+				
+
+			if (j == 0){
+
+				switch (current_state.brujula){
+					case norte:	  contfil = contcol = -1; 	break;
+					case noreste: contfil = -1;contcol = 0;pasa_esquina=false;	break;
+					case este:    contfil= -1; contcol = +1;	break;
+					case sureste: contfil = 0;contcol = +1;pasa_esquina=false;	break;
+					case sur:     contfil = contcol = +1; 	break;
+					case suroeste:contfil = +1;contcol = 0;pasa_esquina=false;	break;
+					case oeste:   contfil= +1; contcol = -1;	break;
+					case noroeste:contfil = 0;contcol = -1;pasa_esquina=false;	break;
+				}
+
+			}else if (j == 3){
+
+				switch (current_state.brujula){
+					case norte:	  contfil = contcol = -2; 	break;
+					case noreste: contfil = -2; contcol = 0;pasa_esquina=false;	break;
+					case este:    contfil= -2; contcol = +2;	break;
+					case sureste: contfil = 0;contcol = +2;pasa_esquina=false;break;
+					case sur:     contfil = contcol = +2; 	break;
+					case suroeste:contfil = +2;contcol = 0;pasa_esquina=false;	break;
+					case oeste:   contfil= +2; contcol = -2;	break;
+					case noroeste:contfil = 0;contcol = -2;pasa_esquina=false;	break;
+	   			}
+
+			}else if (j == 8){
+
+				switch (current_state.brujula){
+					case norte:	  contfil = contcol = -3; 	break;
+					case noreste: contfil = -3;contcol = 0;pasa_esquina=false;	break;
+					case este:    contfil= -3; contcol = +3;	break;
+					case sureste: contfil = 0;contcol = +3;pasa_esquina=false;	break;
+					case sur:     contfil = contcol = +3;	break;
+					case suroeste:contfil = +3;contcol = 0;pasa_esquina=false;	break;
+					case oeste:   contfil= +3; contcol = -3;	break;
+					case noroeste:contfil = 0;contcol = -3;pasa_esquina=false;	break;
+	            }
+
+			}else{
+				switch (current_state.brujula){
+					case norte:	  contcol++; 	break;
+					case noreste: 
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+							contfil++;
+							pasa_esquina=true;
+						}else{
+							contcol++;
+						};
+					break;
+					case este:    contfil++;	break;
+					case sureste: 
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+							contcol--;
+							pasa_esquina=true;
+						}else{
+							contfil++;
+						};	break;
+					case sur:     contcol--; break;
+					case suroeste:
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+					
+							contfil--;
+							pasa_esquina=true;
+						}else{
+							contcol--;
+							
+						};	break;
+					case oeste:   contfil--;	break;
+					case noroeste:	
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+							contcol++;
+							pasa_esquina=true;
+						}else{
+							contfil--;
+						};	break;
+	        	}			
+			}
+
+
+
+			}
+			
+		}
+
+		
+	
+
+	
+		cout << "Cantidad de pisados" << endl;
+		
+		for (int i=1; i<sensores.terreno.size(); i++){
+			cout << mayor_encontrado[i] << endl;
+			
+			if (mayor_encontrado[i] < menor){
+				m=i;
+				menor=mayor_encontrado[i];
+			}
+
+		}
+
+
+
+		if ((sensores.terreno[m]!= 'P')and (sensores.terreno[2]!= 'M') ){
+			cout << "VOY casilla menos pisada  "<< m <<endl;
+			switch(m){
+				case 1: 
+				case 4:
+				case 9:
+
+				accion= actTURN_L;
+
+				
+
+				break;
+
+				case 3: 
+				case 8:
+				case 15:
+				accion= actTURN_SR;
+				break;
+
+				case 2: 
+				case 5:
+				case 6:
+				case 7: 
+				case 10:
+				case 11:
+				case 12:
+				case 13: 
+				case 14:
+				if(sensores.agentes[2]== '_' ){
+					accion= actWALK;
+				}else{accion =actIDLE;}
+				
+				break;
+
+
+			}
+			//prioridad=true;
+		}
+	}
+	}
+*/
+/////////////////
+
+
+
+	if (sensores.posF == -1 and g_encontrado and  (sensores.terreno[2]!= 'M') and  (sensores.terreno[1]!= 'M')and  (sensores.terreno[3]!= 'M') && prioridad==false){
 		cout << "VOY casilla G"<< endl;
 		switch(g){
 			case 1: 
@@ -1181,11 +1442,191 @@ Action ComportamientoJugador::think(Sensores sensores)
 		prioridad=true;
 	}
 	
+
+///PUREba
+
+/*
+
+Orientacion brujula_prue;
+
+	if (bien_situado && prioridad == false){
+	brujula_prue = current_state.brujula;
+	//}else { 
+	//brujula_prue = brujula_falsa;
+	//}
+
+	vector <int>  mayor_encontrado(sensores.terreno.size(),0);
+	int m=2, menor=9999;
+
+
+
+		
+		for (int i = 0; i< memori.size() ; i++){
+
+			
+			for (int j= 0; j < sensores.terreno.size(); j++){
+
+				if((sensores.terreno[j] == memori[i].letra) && ((current_state.col+contcol)==memori[i].col) && (current_state.fil+contfil==memori[i].fil)){
+					mayor_encontrado[j]++;
+				}
+				
+
+			if (j == 0){
+
+				switch (brujula_prue){
+					case norte:	  contfil = contcol = -1; 	break;
+					case noreste: contfil = -1;contcol = 0;pasa_esquina=false;	break;
+					case este:    contfil= -1; contcol = +1;	break;
+					case sureste: contfil = 0;contcol = +1;pasa_esquina=false;	break;
+					case sur:     contfil = contcol = +1; 	break;
+					case suroeste:contfil = +1;contcol = 0;pasa_esquina=false;	break;
+					case oeste:   contfil= +1; contcol = -1;	break;
+					case noroeste:contfil = 0;contcol = -1;pasa_esquina=false;	break;
+				}
+
+			}else if (j == 3){
+
+				switch (brujula_prue){
+					case norte:	  contfil = contcol = -2; 	break;
+					case noreste: contfil = -2; contcol = 0;pasa_esquina=false;	break;
+					case este:    contfil= -2; contcol = +2;	break;
+					case sureste: contfil = 0;contcol = +2;pasa_esquina=false;break;
+					case sur:     contfil = contcol = +2; 	break;
+					case suroeste:contfil = +2;contcol = 0;pasa_esquina=false;	break;
+					case oeste:   contfil= +2; contcol = -2;	break;
+					case noroeste:contfil = 0;contcol = -2;pasa_esquina=false;	break;
+	   			}
+
+			}else if (j == 8){
+
+				switch (brujula_prue){
+					case norte:	  contfil = contcol = -3; 	break;
+					case noreste: contfil = -3;contcol = 0;pasa_esquina=false;	break;
+					case este:    contfil= -3; contcol = +3;	break;
+					case sureste: contfil = 0;contcol = +3;pasa_esquina=false;	break;
+					case sur:     contfil = contcol = +3;	break;
+					case suroeste:contfil = +3;contcol = 0;pasa_esquina=false;	break;
+					case oeste:   contfil= +3; contcol = -3;	break;
+					case noroeste:contfil = 0;contcol = -3;pasa_esquina=false;	break;
+	            }
+
+			}else{
+				switch (brujula_prue){
+					case norte:	  contcol++; 	break;
+					case noreste: 
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+							contfil++;
+							pasa_esquina=true;
+						}else{
+							contcol++;
+						};
+					break;
+					case este:    contfil++;	break;
+					case sureste: 
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+							contcol--;
+							pasa_esquina=true;
+						}else{
+							contfil++;
+						};	break;
+					case sur:     contcol--; break;
+					case suroeste:
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+					
+							contfil--;
+							pasa_esquina=true;
+						}else{
+							contcol--;
+							
+						};	break;
+					case oeste:   contfil--;	break;
+					case noroeste:	
+						if(abs(contcol)==(abs(contfil)) or pasa_esquina){
+							contcol++;
+							pasa_esquina=true;
+						}else{
+							contfil--;
+						};	break;
+	        	}			
+			}
+			}
+
+
+
+			
+			
+		}
+	
+
+		
 	
 
 	
+		cout << "Cantidad de pisados" << endl;
+		
+		for (int i=1; i<sensores.terreno.size(); i++){
+			cout << mayor_encontrado[i] << endl;
+			
+			if (mayor_encontrado[i] < menor){
+				m=i;
+				menor=mayor_encontrado[i];
+			}
 
+		}
+
+
+
+		if ((sensores.terreno[m]!= 'P')and (sensores.terreno[m]!= 'M') ){
+			cout << "VOY casilla menos pisada  "<< m <<endl;
+			switch(m){
+				case 1: 
+				case 4:
+				case 9:
+
+				accion= actTURN_L;
+
+				
+
+				break;
+
+				case 3: 
+				case 8:
+				case 15:
+				accion= actTURN_SR;
+				break;
+
+				case 2: 
+				case 5:
+				case 6:
+				case 7: 
+				case 10:
+				case 11:
+				case 12:
+				case 13: 
+				case 14:
+				if(sensores.agentes[2]== '_' ){
+					accion= actWALK;
+				}else{accion =actIDLE;}
+				
+				break;
+
+
+			}
+			prioridad=true;
+		}
+	}
 	
+
+
+*/
+
+
+///////////
+
+
+
+
+
 
 	if(prioridad==false){
 
@@ -1200,7 +1641,7 @@ Action ComportamientoJugador::think(Sensores sensores)
 			){
 			//cout << "ANDO NORMAL"<< (bool)tengo_zapatos<< "  "<<  cont_malasuerte<<endl;
 			accion = actWALK;
-			cont_malasuerte= 3+(rand()%(5-3));
+			cont_malasuerte= 3+(rand()%(6-3));
 		}/*else if(encontrado >= 1){
 			cout << "ENCUENTRO CASILLA REPE"<< endl;
 			accion = actTURN_SR;
@@ -1267,6 +1708,10 @@ Action ComportamientoJugador::think(Sensores sensores)
 
 	if ( (sensores.bateria < sensores.tiempo) && (sensores.terreno[0]== 'X') ){
 		accion = actIDLE;
+	}
+
+	if ((accion == actWALK) && ( sensores.bateria > sensores.tiempo) && (sensores.terreno[6]!= 'P') && ((sensores.terreno[6]!= 'M'))){
+		accion = actRUN;
 	}
 
 
