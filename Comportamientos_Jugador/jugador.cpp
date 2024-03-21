@@ -1467,7 +1467,11 @@ Orientacion brujula_prue;
 			for (int j= 0; j < sensores.terreno.size(); j++){
 
 				if((sensores.terreno[j] == memori[i].letra) && ((current_state.col+contcol)==memori[i].col) && (current_state.fil+contfil==memori[i].fil)){
+					if (sensores.terreno[j] == 'M' || sensores.terreno[j] == 'P' ){
+					mayor_encontrado[j]= menor;	
+					}else{
 					mayor_encontrado[j]++;
+					}
 				}
 				
 
@@ -1617,8 +1621,8 @@ Orientacion brujula_prue;
 	}
 	
 
-
 */
+
 
 
 ///////////
@@ -1709,11 +1713,11 @@ Orientacion brujula_prue;
 	if ( (sensores.bateria < sensores.tiempo) && (sensores.terreno[0]== 'X') ){
 		accion = actIDLE;
 	}
-
+/*
 	if ((accion == actWALK) && ( sensores.bateria > sensores.tiempo) && (sensores.terreno[6]!= 'P') && ((sensores.terreno[6]!= 'M'))){
 		accion = actRUN;
 	}
-
+*/
 
 	//RETURN
 	last_action=accion;
